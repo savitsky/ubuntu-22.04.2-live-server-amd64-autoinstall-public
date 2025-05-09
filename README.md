@@ -4,7 +4,7 @@ This script is originally from <a href="https://github.com/covertsh/ubuntu-autoi
 A script to generate a fully-automated ISO image for installing Ubuntu onto a machine without human interaction. This uses the new autoinstall method
 for Ubuntu 22.04
 
-<h1 align="center">Behavior</h1>Behavior
+<h1 align="center">Behavior</h1>
 Check out the usage information below for arguments. The basic idea is to take an unmodified Ubuntu ISO image, extract it, add some kernel command line parameters, then repack the data into a new ISO. This is needed for full automation because the ```autoinstall``` parameter must be present on the kernel command line, otherwise the installer will wait for a human to confirm. This script automates the process of creating an ISO with this built-in.
 
 To attach via a volume (such as a separate ISO image), see the Ubuntu autoinstall <a href="https://ubuntu.com/server/docs/install/autoinstall-quickstart">quick start guide</a>. It's really very easy! To bake everything into a single ISO instead, you can use the ```-a``` flag with this script and provide a user-data file containing the autoinstall configuration and optionally cloud-init data, plus a meta-data file if you choose. The meta-data file is optional and will be empty if it is not specified. With an 'all-in-one' ISO, you simply boot a machine using the ISO and the installer will do the rest. At the end the machine will reboot into the new OS.
