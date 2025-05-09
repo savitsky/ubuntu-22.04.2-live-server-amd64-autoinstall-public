@@ -1,15 +1,13 @@
 
 <h1 align="center">Ubuntu Autoinstall Generator</h1>
-This script is originally from [covertsh/ubuntu-autoinstall-generator](https://github.com/covertsh/ubuntu-autoinstall-generator), and I have modified it to suit my own vision.
+This script is originally from <a href="https://github.com/covertsh/ubuntu-autoinstall-generator">covertsh/ubuntu-autoinstall-generator</a>, and I have modified it to suit my own vision.
 A script to generate a fully-automated ISO image for installing Ubuntu onto a machine without human interaction. This uses the new autoinstall method
 for Ubuntu 22.04
 
-## [Looking for the desktop version?](https://github.com/covertsh/ubuntu-preseed-iso-generator)
-
-### Behavior
+<h1 align="center">Behavior</h1>Behavior
 Check out the usage information below for arguments. The basic idea is to take an unmodified Ubuntu ISO image, extract it, add some kernel command line parameters, then repack the data into a new ISO. This is needed for full automation because the ```autoinstall``` parameter must be present on the kernel command line, otherwise the installer will wait for a human to confirm. This script automates the process of creating an ISO with this built-in.
 
-To attach via a volume (such as a separate ISO image), see the Ubuntu autoinstall [quick start guide](https://ubuntu.com/server/docs/install/autoinstall-quickstart). It's really very easy! To bake everything into a single ISO instead, you can use the ```-a``` flag with this script and provide a user-data file containing the autoinstall configuration and optionally cloud-init data, plus a meta-data file if you choose. The meta-data file is optional and will be empty if it is not specified. With an 'all-in-one' ISO, you simply boot a machine using the ISO and the installer will do the rest. At the end the machine will reboot into the new OS.
+To attach via a volume (such as a separate ISO image), see the Ubuntu autoinstall <a href="https://ubuntu.com/server/docs/install/autoinstall-quickstart">quick start guide</a>. It's really very easy! To bake everything into a single ISO instead, you can use the ```-a``` flag with this script and provide a user-data file containing the autoinstall configuration and optionally cloud-init data, plus a meta-data file if you choose. The meta-data file is optional and will be empty if it is not specified. With an 'all-in-one' ISO, you simply boot a machine using the ISO and the installer will do the rest. At the end the machine will reboot into the new OS.
 
 This script can use an existing ISO image or download the latest daily image from the Ubuntu project. Using a fresh ISO speeds things up because there won't be as many packages to update during the installation.
 
