@@ -1,5 +1,5 @@
 
-# Ubuntu Autoinstall Generator
+<h1 align="center">Ubuntu Autoinstall Generator</h1>
 This script is originally from [covertsh/ubuntu-autoinstall-generator](https://github.com/covertsh/ubuntu-autoinstall-generator), and I have modified it to suit my own vision.
 A script to generate a fully-automated ISO image for installing Ubuntu onto a machine without human interaction. This uses the new autoinstall method
 for Ubuntu 22.04
