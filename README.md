@@ -1,0 +1,1 @@
+# ubuntu-22.04.2-live-server-amd64-autoinstall-public
