@@ -1,0 +1,83 @@
+#cloud-config
+autoinstall:
+  version: 1
+  early-commands:
+    - echo "nameserver 8.8.8.8" | tee /etc/resolv.conf > /dev/null
+  refresh-installer:
+    update: yes
+  locale: en_US.UTF-8
+  keyboard:
+    layout: us
+  timezone: Europe/Prague
+
+  network:
+    version: 2
+    ethernets:
+      ens18:
+        dhcp4: true
+
+  storage:
+    layout:
+      name: lvm
+      match:
+        size: largest
+
+  identity:
+    hostname: ubuntu-server
+    password: "$6$m8T7hJHgCLxDPyUx$5k//mPuYTtw1c/RXYHlxnAe5pFItWnM0f1gRH0gTmIcLa0lG.DGHN3is5zH3ELSI59RjVF2aMgs7xUEfEZal41"  # openssl passwd -6 -stdin <<< password
+    username: tempuser
+
+  ssh:
+    install-server: true
+    authorized-keys:
+      - "put your ssh-key here"
+
+  packages:
+    - network-manager
+    - git
+    - net-tools
+    - htop
+    - qemu-guest-agent
+    - mc
+  package_update: true
+  package_upgrade: true
+
+  user-data:
+    disable_root: false
+
+  late-commands:
+    - curtin in-target -- apt-get --purge -y remove apport byobu fwupd lxd-agent-loader plymouth popularity-contest
+    - curtin in-target -- apt-get autoremove -y
+    - curtin in-target -- apt-get clean
+    - sed -i 's/ENABLED=1/ENABLED=0/' /target/etc/default/motd-news
+    - ln -fs /dev/null /target/etc/systemd/system/motd-news.timer
+    - ln -fs /dev/null /target/etc/systemd/system/plymouth-start.service
+    - mkdir -p /target/root/.ssh
+    - touch /target/root/.ssh/authorized_keys
+    - chmod 0700 /target/root/.ssh
+    - chmod 600 /target/root/.ssh/authorized_keys
+    - echo "PUT YOUR SSH-KEY HERE" >> /target/root/.ssh/authorized_keys
+    - echo "ubuntu-host-$(openssl rand -hex 3)" > /target/etc/hostname
+    - echo "Ubuntu 22.04 LTS \nIP - $(hostname -I)\n" > /target/etc/issue
+    - sed -ie "s/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=10/" /target/etc/default/grub
+    - sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication no/' /target/etc/ssh/sshd_config
+    - sed -i 's/^#\?PubkeyAuthentication.*/PubkeyAuthentication yes/' /target/etc/ssh/sshd_config
+    - sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin prohibit-password/' /target/etc/ssh/sshd_config
+    - curtin in-target -- update-grub
+    - curtin in-target -- netplan generate
+    - curtin in-target -- netplan apply
+    - curtin in-target -- systemctl enable qemu-guest-agent
+    - curtin in-target -- systemctl start qemu-guest-agent
+    - curtin in-target -- lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
+    - curtin in-target -- resize2fs /dev/mapper/ubuntu--vg-ubuntu--lv
+    - curtin in-target -- bash -c "echo 'root:MySecureRootPassword' | chpasswd"
+    - curtin in-target -- pkill -u tempuser || true
+    - curtin in-target -- userdel -r tempuser || true
+    - rm -rf /target/home/tempuser
+    - echo "*******************************************"
+    - echo "*                                         *"
+    - echo "*         Installation complete           *"
+    - echo "*                                         *"
+    - echo "*******************************************"
+    - sleep 3
+    - reboot now
